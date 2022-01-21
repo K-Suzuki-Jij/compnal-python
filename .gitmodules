@@ -1,0 +1,4 @@
+[submodule "compnal"]
+	path = compnal
+	url = git@github.com:K-Suzuki-Jij/compnal.git
+	branch = main
