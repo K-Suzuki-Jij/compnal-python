@@ -8,7 +8,7 @@
 #ifndef COMPNAL_PYBIND11_SPARSE_MATRIX_HPP_
 #define COMPNAL_PYBIND11_SPARSE_MATRIX_HPP_
 
-#include "../../src/sparse_matrix/all.hpp"
+#include "../../compnal-cpp/src/sparse_matrix/all.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>

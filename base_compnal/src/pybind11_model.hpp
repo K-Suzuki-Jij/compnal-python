@@ -8,7 +8,7 @@
 #ifndef COMPNAL_PYBIND11_MODEL_HPP_
 #define COMPNAL_PYBIND11_MODEL_HPP_
 
-#include "../../src/model/all.hpp"
+#include "../../compnal-cpp/src/model/all.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>

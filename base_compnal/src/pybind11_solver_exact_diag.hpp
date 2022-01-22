@@ -8,7 +8,7 @@
 #ifndef COMPNAL_PYBIND11_SOLVER_EXACT_DIAG_HPP_
 #define COMPNAL_PYBIND11_SOLVER_EXACT_DIAG_HPP_
 
-#include "../../src/solver/all.hpp"
+#include "../../compnal-cpp/src/solver/all.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>

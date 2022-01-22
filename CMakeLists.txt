@@ -138,5 +138,5 @@ endif()
 include(external/pybind11.cmake)
 find_package(Python COMPONENTS Development.Module)
 
-add_subdirectory(wrapper)
+add_subdirectory(base_compnal)
 
