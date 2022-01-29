@@ -29,10 +29,10 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 void pybind11ModelBoundaryCondition(py::module &m) {
-   py::enum_<compnal::utility::BoundaryCondition>(m, "BoundaryCondition")
-      .value("OBC", compnal::utility::BoundaryCondition::OBC)
-      .value("PBC", compnal::utility::BoundaryCondition::PBC)
-      .value("SSD", compnal::utility::BoundaryCondition::SSD);
+   py::enum_<compnal::model::BoundaryCondition>(m, "BoundaryCondition")
+      .value("OBC", compnal::model::BoundaryCondition::OBC)
+      .value("PBC", compnal::model::BoundaryCondition::PBC)
+      .value("SSD", compnal::model::BoundaryCondition::SSD);
 }
 
 template<typename RealType>
@@ -341,8 +341,8 @@ void pybind11ModelXXZ1D(py::module &m) {
    c.def(py::init<>());
    c.def(py::init<const int>(), "system_size"_a);
    c.def(py::init<const int, const double>(), "system_size"_a, "spin"_a);
-   c.def(py::init<const int, const compnal::utility::BoundaryCondition>(), "system_size"_a, "boundary_condition"_a);
-   c.def(py::init<const int, const double, const compnal::utility::BoundaryCondition>(), "system_size"_a, "spin"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const compnal::model::BoundaryCondition>(), "system_size"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const double, const compnal::model::BoundaryCondition>(), "system_size"_a, "spin"_a, "boundary_condition"_a);
    
    //Public Member Functions
    c.def("set_J_z" , py::overload_cast<const std::vector<RealType>&>(&XXZ1D::SetJz), "J_z"_a);
@@ -381,8 +381,8 @@ void pybind11ModelHubbard1D(py::module &m) {
    c.def(py::init<>());
    c.def(py::init<const int>(), "system_size"_a);
    c.def(py::init<const int, const int>(), "system_size"_a, "total_electron"_a);
-   c.def(py::init<const int, const compnal::utility::BoundaryCondition>(), "system_size"_a, "boundary_condition"_a);
-   c.def(py::init<const int, const int, const compnal::utility::BoundaryCondition>(), "system_size"_a, "total_electron"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const compnal::model::BoundaryCondition>(), "system_size"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const int, const compnal::model::BoundaryCondition>(), "system_size"_a, "total_electron"_a, "boundary_condition"_a);
    
    //Public Member Functions
    c.def("set_t"  , py::overload_cast<const RealType>(&HBM1D::SetHopping), "t"_a);
@@ -417,10 +417,10 @@ void pybind11ModelKondoLattice1D(py::module &m) {
    c.def(py::init<const int, const double>(), "system_size"_a, "spin"_a);
    c.def(py::init<const int, const int>(), "system_size"_a, "total_electron"_a);
    c.def(py::init<const int, const double, const int>(), "system_size"_a, "spin"_a, "total_electron"_a);
-   c.def(py::init<const int, const compnal::utility::BoundaryCondition>(), "system_size"_a, "boundary_condition"_a);
-   c.def(py::init<const int, const double, const compnal::utility::BoundaryCondition>(), "system_size"_a, "spin"_a, "boundary_condition"_a);
-   c.def(py::init<const int, const int, const compnal::utility::BoundaryCondition>(), "system_size"_a, "total_electron"_a, "boundary_condition"_a);
-   c.def(py::init<const int, const double, const int, const compnal::utility::BoundaryCondition>(), "system_size"_a, "spin"_a, "total_electron"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const compnal::model::BoundaryCondition>(), "system_size"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const double, const compnal::model::BoundaryCondition>(), "system_size"_a, "spin"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const int, const compnal::model::BoundaryCondition>(), "system_size"_a, "total_electron"_a, "boundary_condition"_a);
+   c.def(py::init<const int, const double, const int, const compnal::model::BoundaryCondition>(), "system_size"_a, "spin"_a, "total_electron"_a, "boundary_condition"_a);
    
    //Member Functions
    c.def("set_hopping", py::overload_cast<const RealType>(&KLM1D::SetHopping), "t"_a);
