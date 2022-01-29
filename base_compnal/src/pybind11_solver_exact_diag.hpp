@@ -28,6 +28,12 @@ namespace py = pybind11;
 //The following does not bring in anything else from the pybind11 namespace except for literals.
 using namespace pybind11::literals;
 
+void pybind11SolverDiagonalizationMethod(py::module &m) {
+   py::enum_<compnal::solver::DiagMethod>(m, "DiagMethod")
+      .value("LANCZOS", compnal::solver::DiagMethod::LANCZOS)
+      .value("LOBPCG", compnal::solver::DiagMethod::LOBPCG);
+}
+
 template<class ModelClass>
 void pybind11SolverExactDiag(py::module &m, const std::string &mtype_str) {
    
@@ -53,20 +59,20 @@ void pybind11SolverExactDiag(py::module &m, const std::string &mtype_str) {
    .def("calculate_correlation_function",
         py::overload_cast<const CRS&, const int, const CRS&, const int, const CRS&, const int, const CRS&, const int, const int>(&ED::CalculateCorrelationFunction),
         "m_1"_a, "site_1"_a, "m_2"_a, "site_2"_a, "m_3"_a, "site_3"_a, "m_4"_a, "site_4"_a, "level"_a = 0)
-   .def("calculate_ground_state", [](ED &self, const std::string &diag_method) {
+   .def("calculate_ground_state", [](ED &self) {
       py::scoped_ostream_redirect stream(
           std::cout,                                // std::ostream&
           py::module_::import("sys").attr("stdout") // Python output
       );
-      self.CalculateGroundState(diag_method);
-   }, "diag_method"_a = "Lanczos")
-   .def("calculate_target_state", [](ED &self, const int target_sector, const std::string &diag_method) {
+      self.CalculateGroundState();
+   })
+   .def("calculate_target_state", [](ED &self, const int target_sector) {
       py::scoped_ostream_redirect stream(
           std::cout,                                // std::ostream&
           py::module_::import("sys").attr("stdout") // Python output
       );
-      self.CalculateTargetState(target_sector, diag_method);
-   }, "target_sector"_a, "diag_method"_a = "Lanczos");
+      self.CalculateTargetState(target_sector);
+   }, "target_sector"_a);
    
    auto mkci_str = std::string("ExactDiag");
    m.def(mkci_str.c_str(), [](const ModelClass &model) {
