@@ -138,3 +138,4 @@ class U1Spin1D(base_compnal.model.U1Spin_1D):
     @staticmethod
     def make_onsite_operator_sm(spin: float):
         return base_compnal.model._U1Spin_1D.make_onsite_operator_sm(spin)
+
