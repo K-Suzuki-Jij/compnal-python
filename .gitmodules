@@ -1,4 +1,4 @@
 [submodule "compnal-cpp"]
 	path = compnal-cpp
 	url = git@github.com:K-Suzuki-Jij/compnal-cpp.git
-	branch = develop
+	branch = main
