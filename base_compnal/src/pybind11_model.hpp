@@ -89,7 +89,6 @@ void pybind11ModelGeneral(py::module &m) {
    gm_u1_spin.def("add_potential"  , &GMBU1S::AddPotential, "site"_a, "m"_a, "value"_a = 1.0);
    gm_u1_spin.def("add_interaction", &GMBU1S::AddInteraction, "site_1"_a, "m_1"_a, "site_2"_a, "m_2"_a, "value"_a = 1.0);
    gm_u1_spin.def("get_system_size", &GMBU1S::GetSystemSize);
-   gm_u1_spin.def("get_potential_list"  , &GMBU1S::GetPotentialList);
    gm_u1_spin.def("get_interaction_list", &GMBU1S::GetInteractionList);
    gm_u1_spin.def("get_potential"       , &GMBU1S::GetPotential, "site"_a);
    gm_u1_spin.def("get_interaction"     , &GMBU1S::GetInteraction, "site_1"_a, "site_2"_a);
@@ -99,6 +98,13 @@ void pybind11ModelGeneral(py::module &m) {
       std::sort(vec.begin(), vec.end());
       return vec;
    });
+   gm_u1_spin.def("get_potential_list"  , [](GMBU1S &self) {
+      py::dict py_potential;
+      for (const auto &it: self.GetPotentialList()) {
+         
+      }
+   });
+
 
 }
 
