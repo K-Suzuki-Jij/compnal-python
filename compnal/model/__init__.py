@@ -12,4 +12,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from .base_u1_spin_1d import U1Spin1D
+from .u1_spin_1d import U1Spin1D
