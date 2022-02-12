@@ -1,4 +1,4 @@
 [submodule "compnal-cpp"]
 	path = compnal-cpp
 	url = git@github.com:K-Suzuki-Jij/compnal-cpp.git
-	branch = main
+	branch = feature/refactoring

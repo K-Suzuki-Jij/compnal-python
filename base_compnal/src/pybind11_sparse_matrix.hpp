@@ -23,6 +23,9 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 
+namespace compnal {
+namespace wrapper {
+
 namespace py = pybind11;
 
 //The following does not bring in anything else from the pybind11 namespace except for literals.
@@ -44,38 +47,29 @@ void pybind11SparseMatrixCRS(py::module &m) {
    c.def("assign", &CRS::Assign);
    c.def("multiply_by_scalar", py::overload_cast<const RealType>(&CRS::MultiplyByScalar), "scalar"_a);
    c.def("free", &CRS::Free);
-   c.def("Clear", &CRS::Clear);
+   c.def("clear", &CRS::Clear);
    c.def("is_symmetric", &CRS::isSymmetric, "threshold"_a = 0.000000000000001/*pow(10,-15)*/);
-   c.def("print_matrix", &CRS::PrintMatrix, "display_name"_a = "matrix");
+   c.def("print", &CRS::Print, "display_name"_a = "matrix");
    c.def("print_info", &CRS::PrintInfo, "display_name"_a = "matrix");
    c.def("__mul__", [](const CRS &lhs, const CRS &rhs) {
-      CRS mat;
-      compnal::sparse_matrix::CalculateMatrixMatrixProduct(&mat, 1.0, lhs, 1.0, rhs);
-      return mat;
+      return compnal::sparse_matrix::CalculateMatrixMatrixProduct(1.0, lhs, rhs);
    }, py::is_operator());
    c.def("__add__", [](const CRS &lhs, const CRS &rhs) {
-      CRS mat;
-      compnal::sparse_matrix::CalculateMatrixMatrixSum(&mat, 1.0, lhs, 1.0, rhs);
-      return mat;
+      return compnal::sparse_matrix::CalculateMatrixMatrixSum(1.0, lhs, 1.0, rhs);
    }, py::is_operator());
    c.def("__sub__", [](const CRS &lhs, const CRS &rhs) {
-      CRS mat;
-      compnal::sparse_matrix::CalculateMatrixMatrixSum(&mat, 1.0, lhs, -1.0, rhs);
-      return mat;
+      return compnal::sparse_matrix::CalculateMatrixMatrixSum(1.0, lhs, -1.0, rhs);
    }, py::is_operator());
    c.def("__iadd__", [](CRS &self, const CRS &rhs) {
-      const CRS lhs = self;
-      compnal::sparse_matrix::CalculateMatrixMatrixSum(&self, 1.0, lhs, 1.0, rhs);
+      self = compnal::sparse_matrix::CalculateMatrixMatrixSum(1.0, self, 1.0, rhs);
       return self;
    }, py::is_operator());
    c.def("__isub__", [](CRS &self, const CRS &rhs) {
-      const CRS lhs = self;
-      compnal::sparse_matrix::CalculateMatrixMatrixSum(&self, 1.0, lhs, -1.0, rhs);
+      self = compnal::sparse_matrix::CalculateMatrixMatrixSum(1.0, self, -1.0, rhs);
       return self;
    }, py::is_operator());
    c.def("__imul__", [](CRS &self, const CRS &rhs) {
-      const CRS lhs = self;
-      compnal::sparse_matrix::CalculateMatrixMatrixProduct(&self, 1.0, lhs, 1.0, rhs);
+      self = compnal::sparse_matrix::CalculateMatrixMatrixProduct(1.0, self, rhs);
       return self;
    }, py::is_operator());
    c.def("__eq__", [](CRS &self, const CRS &rhs) {
@@ -160,6 +154,7 @@ void pybind11SparseMatrixParameters(py::module &m) {
    
 }
 
-
+} //namespace wrapper
+} //namespace compnal
 
 #endif /* COMPNAL_PYBIND11_SPARSE_MATRIX_HPP_ */
