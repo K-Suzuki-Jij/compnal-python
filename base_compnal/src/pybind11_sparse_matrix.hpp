@@ -72,10 +72,10 @@ void pybind11SparseMatrixCRS(py::module &m) {
       self = compnal::sparse_matrix::CalculateMatrixMatrixProduct(1.0, self, rhs);
       return self;
    }, py::is_operator());
-   c.def("__eq__", [](CRS &self, const CRS &rhs) {
+   c.def("__eq__", [](const CRS &self, const CRS &rhs) {
       return self == rhs;
    }, py::is_operator());
-   c.def("__ne__", [](CRS &self, const CRS &rhs) {
+   c.def("__ne__", [](const CRS &self, const CRS &rhs) {
       return self != rhs;
    }, py::is_operator());
    

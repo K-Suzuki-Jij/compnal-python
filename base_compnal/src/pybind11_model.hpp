@@ -43,7 +43,11 @@ void pybind11ModelBaseU1Spin(py::module &m) {
    //Constructors
    py_c.def(py::init<>());
    py_c.def(py::init<const type::HalfInt>(), "spin"_a);
+   py_c.def(py::init<const double>(), "spin"_a);
    py_c.def(py::init<const type::HalfInt, const type::HalfInt>(), "spin"_a, "total_sz"_a);
+   py_c.def(py::init<const type::HalfInt, const double>(), "spin"_a, "total_sz"_a);
+   py_c.def(py::init<const double, const type::HalfInt>(), "spin"_a, "total_sz"_a);
+   py_c.def(py::init<const double, const double>(), "spin"_a, "total_sz"_a);
 
    //Public Member Functions
    py_c.def("set_magnitude_spin"     , &CppC::SetMagnitudeSpin, "spin"_a);
@@ -80,12 +84,48 @@ void pybind11ModelGeneral(py::module &m) {
    
    using BU1S   = compnal::model::BaseU1Spin<RealType>;
    using GMBU1S = compnal::model::GeneralModel<BU1S>;
-   using IndexType = typename GMBU1S::IndexType;
-
+   using IntegerType = typename GMBU1S::IntegerType;
+   using StringType  = typename GMBU1S::StringType;
+   using IndexType   = typename GMBU1S::IndexType;
+   using VariantVecType = std::vector<typename GMBU1S::VariantType>;
+   
+   auto convert_to_py = [](const auto &v) {
+      if (std::holds_alternative<IntegerType>(v)) {
+         return py::int_(std::get<IntegerType>(v));
+      }
+      else if (std::holds_alternative<StringType>(v)) {
+         return py::str(std::get<StringType>(v));
+      }
+      else if (std::holds_alternative<VariantVecType>(v)) {
+         const auto &variant_vec = std::get<VariantVecType>(v);
+         py::tuple tuple;
+         for (const auto &it: variant_vec) {
+            if (std::holds_alternative<IntegerType>(it)) {
+               tuple = tuple + py::make_tuple(std::get<IntegerType>(it));
+            }
+            else if (std::holds_alternative<StringType>(it)) {
+               tuple = tuple + py::make_tuple(std::get<StringType>(it));
+            }
+            else {
+               throw std::runtime_error("Invalid template parameters");
+            }
+         }
+         return tuple;
+      }
+      else {
+         throw std::runtime_error("Invalid template parameters");
+      }
+   };
+   
    py::class_<GMBU1S, BU1S> gm_u1_spin(m, "U1Spin", py::module_local());
    gm_u1_spin.def(py::init<>());
    gm_u1_spin.def(py::init<const type::HalfInt>(), "spin"_a);
+   gm_u1_spin.def(py::init<const double>(), "spin"_a);
    gm_u1_spin.def(py::init<const type::HalfInt, const type::HalfInt>(), "spin"_a, "total_sz"_a);
+   gm_u1_spin.def(py::init<const type::HalfInt, const double>(), "spin"_a, "total_sz"_a);
+   gm_u1_spin.def(py::init<const double, const type::HalfInt>(), "spin"_a, "total_sz"_a);
+   gm_u1_spin.def(py::init<const double, const double>(), "spin"_a, "total_sz"_a);
+
    gm_u1_spin.def("add_potential"  , &GMBU1S::AddPotential, "site"_a, "m"_a, "value"_a = 1.0);
    gm_u1_spin.def("add_interaction", &GMBU1S::AddInteraction, "site_1"_a, "m_1"_a, "site_2"_a, "m_2"_a, "value"_a = 1.0);
    gm_u1_spin.def("get_system_size", &GMBU1S::GetSystemSize);
@@ -96,15 +136,71 @@ void pybind11ModelGeneral(py::module &m) {
       const auto set = self.GetIndexList();
       std::vector<IndexType> vec(set.begin(), set.end());
       std::sort(vec.begin(), vec.end());
-      return vec;
+      py::list list;
+      for (const auto &it: vec) {
+         if (std::holds_alternative<IntegerType>(it)) {
+            list.append(py::int_(std::get<IntegerType>(it)));
+         }
+         else if (std::holds_alternative<StringType>(it)) {
+            list.append(py::str(std::get<StringType>(it)));
+         }
+         else if (std::holds_alternative<VariantVecType>(it)) {
+            const auto &variant_vec = std::get<VariantVecType>(it);
+            py::tuple tuple;
+            for (const auto &it2: variant_vec) {
+               if (std::holds_alternative<IntegerType>(it2)) {
+                  tuple = tuple + py::make_tuple(std::get<IntegerType>(it2));
+               }
+               else if (std::holds_alternative<StringType>(it2)) {
+                  tuple = tuple + py::make_tuple(std::get<StringType>(it2));
+               }
+               else {
+                  throw std::runtime_error("Invalid template parameters");
+               }
+            }
+            list.append(tuple);
+         }
+         else {
+            throw std::runtime_error("Invalid template parameters");
+         }
+      }
+      return list;
    });
+   
    gm_u1_spin.def("get_potential_list"  , [](GMBU1S &self) {
       py::dict py_potential;
       for (const auto &it: self.GetPotentialList()) {
-         
+         if (std::holds_alternative<IntegerType>(it.first)) {
+            py_potential[py::int_(std::get<IntegerType>(it.first))] = it.second;
+         }
+         else if (std::holds_alternative<StringType>(it.first)) {
+            py_potential[py::str(std::get<StringType>(it.first))] = it.second;
+         }
+         else if (std::holds_alternative<VariantVecType>(it.first)) {
+            const auto &variant_vec = std::get<VariantVecType>(it.first);
+            py::tuple tuple;
+            for (const auto &it: variant_vec) {
+               if (std::holds_alternative<IntegerType>(it)) {
+                  tuple = tuple + py::make_tuple(std::get<IntegerType>(it));
+               }
+               else if (std::holds_alternative<StringType>(it)) {
+                  tuple = tuple + py::make_tuple(std::get<StringType>(it));
+               }
+               else {
+                  throw std::runtime_error("Invalid template parameters");
+               }
+            }
+            py_potential[tuple] = it.second;
+         }
+         else {
+            throw std::runtime_error("Invalid template parameters");
+         }
       }
+      return py_potential;
    });
 
+
+   
 
 }
 
